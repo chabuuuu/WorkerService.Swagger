@@ -1,0 +1,288 @@
+openapi: 3.0.0
+paths:
+  /api/v1/admin:
+    post:
+      operationId: AdminController_createAdmin
+      summary: Create new admin
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminDTO'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Admin
+    get:
+      operationId: AdminController_getAdmins
+      summary: Get admin list
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - JWT-auth: []
+      tags:
+        - Admin
+  /api/v1/admin/{id}:
+    put:
+      operationId: AdminController_updateAdmins
+      summary: Update Admin With ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminDTO'
+      responses:
+        '200':
+          description: ''
+      security:
+        - JWT-auth: []
+      tags:
+        - Admin
+    delete:
+      operationId: AdminController_deleteAdmins
+      summary: Delete Admin With ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - JWT-auth: []
+      tags:
+        - Admin
+  /api/v1/admin/login:
+    post:
+      operationId: AdminController_loginAdmin
+      summary: GET JWT Token
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminLoginDTO'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Admin
+  /api/v1/schedule:
+    post:
+      operationId: ScheduleController_createSchedule
+      summary: Create new schedule
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleDTO'
+      responses:
+        '201':
+          description: ''
+      security:
+        - JWT-auth: []
+      tags:
+        - Schedule
+    get:
+      operationId: ScheduleController_getSchedules
+      summary: Get all schedule available
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      security:
+        - JWT-auth: []
+      tags:
+        - Schedule
+  /api/v1/schedule/{id}:
+    delete:
+      operationId: ScheduleController_deleteSchedule
+      summary: Delete schedule available with ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      security:
+        - JWT-auth: []
+      tags:
+        - Schedule
+  /api/v1/mornitor:
+    get:
+      operationId: MornitorController_getMornitor
+      summary: Get all mornitor logs
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Mornitor Log
+  /api/v1/mornitor/{id}:
+    delete:
+      operationId: MornitorController_deleteMornitor
+      summary: Delete mornitor log with id, set ID = -1 will delete all
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Mornitor Log
+  /api/v1/sync:
+    get:
+      operationId: SyncController_getSync
+      summary: Get sync log
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Sync Database Log
+  /api/v1/sync/start:
+    get:
+      operationId: SyncController_startSync
+      summary: Get sync log
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Sync Database Log
+  /api/v1/message/send:
+    post:
+      operationId: MessageController_postMsg
+      summary: Send message
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageDTO'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Message
+  /api/v1/message:
+    get:
+      operationId: MessageController_getMsg
+      summary: Get all messages
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Message
+info:
+  title: Worker Service API
+  description: API Endpoint of Worker Service
+  version: '1.0'
+  contact: {}
+tags:
+  - name: Worker Service
+    description: ''
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    JWT-auth:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+      name: JWT
+      description: Enter JWT token
+      in: header
+  schemas:
+    AdminDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        fullname:
+          type: string
+        phone_number:
+          type: string
+        address:
+          type: string
+      required:
+        - username
+        - password
+        - fullname
+        - phone_number
+        - address
+    AdminLoginDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    ScheduleDTO:
+      type: object
+      properties:
+        job:
+          type: string
+        time:
+          type: string
+        content:
+          type: string
+        scheduled:
+          type: boolean
+        adminId:
+          type: string
+      required:
+        - job
+        - time
+        - content
+        - scheduled
+        - adminId
+    MessageDTO:
+      type: object
+      properties:
+        message:
+          type: string
+        sender_id:
+          type: number
+        nameExchange:
+          type: number
+        send_type:
+          type: string
+        send_count:
+          type: number
+      required:
+        - message
+        - sender_id
+        - nameExchange
+        - send_type
+        - send_count
