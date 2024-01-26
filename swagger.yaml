@@ -1,87 +1,5 @@
 openapi: 3.0.0
 paths:
-  /api/v1/admin:
-    post:
-      operationId: AdminController_createAdmin
-      summary: Create new admin
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdminDTO'
-      responses:
-        '201':
-          description: ''
-      tags:
-        - Admin
-    get:
-      operationId: AdminController_getAdmins
-      summary: Get admin list
-      parameters: []
-      responses:
-        '200':
-          description: ''
-      security:
-        - JWT-auth: []
-      tags:
-        - Admin
-  /api/v1/admin/{id}:
-    put:
-      operationId: AdminController_updateAdmins
-      summary: Update Admin With ID
-      parameters:
-        - name: id
-          required: true
-          in: path
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdminDTO'
-      responses:
-        '200':
-          description: ''
-      security:
-        - JWT-auth: []
-      tags:
-        - Admin
-    delete:
-      operationId: AdminController_deleteAdmins
-      summary: Delete Admin With ID
-      parameters:
-        - name: id
-          required: true
-          in: path
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-      security:
-        - JWT-auth: []
-      tags:
-        - Admin
-  /api/v1/admin/login:
-    post:
-      operationId: AdminController_loginAdmin
-      summary: GET JWT Token
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdminLoginDTO'
-      responses:
-        '201':
-          description: ''
-      tags:
-        - Admin
   /api/v1/schedule:
     post:
       operationId: ScheduleController_createSchedule
@@ -95,9 +13,11 @@ paths:
               $ref: '#/components/schemas/ScheduleDTO'
       responses:
         '201':
-          description: ''
-      security:
-        - JWT-auth: []
+          description: 'A schedule object'
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Schedule'
       tags:
         - Schedule
     get:
@@ -107,8 +27,10 @@ paths:
       responses:
         '200':
           description: ''
-      security:
-        - JWT-auth: []
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Schedule_Array'
       tags:
         - Schedule
   /api/v1/schedule/{id}:
@@ -117,6 +39,7 @@ paths:
       summary: Delete schedule available with ID
       parameters:
         - name: id
+          example: 1
           required: true
           in: path
           schema:
@@ -124,8 +47,10 @@ paths:
       responses:
         '200':
           description: ''
-      security:
-        - JWT-auth: []
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Schedule_Array'
       tags:
         - Schedule
   /api/v1/mornitor:
@@ -208,46 +133,46 @@ tags:
   - name: Worker Service
     description: ''
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3002
+    description: Development server
+definitions:
+  Schedule_Array:
+    type: array
+    items:
+      $ref: '#/definitions/Schedule'
+  Schedule:
+    type: object
+    properties:
+      job:
+        type: string
+        example: mornitor
+        description: Job name
+      time:
+        type: string
+        example: '*/5 * * * * *'
+        description: Time to run job
+      content:
+        type: string
+        example: ''
+        description: Content of job
+      scheduled:
+        type: boolean
+        example: true
+        description: Status of job
+      createdAt:
+        type: string
+        example: 2021-05-30T15:00:00.000Z
+        description: Created time
+      updatedAt:
+        type: string
+        example: 2021-05-30T15:00:00.000Z
+        description: Updated time
+      adminId:
+        type: number
+        example: 1
+        description: Admin ID
 components:
-  securitySchemes:
-    JWT-auth:
-      scheme: bearer
-      bearerFormat: JWT
-      type: http
-      name: JWT
-      description: Enter JWT token
-      in: header
   schemas:
-    AdminDTO:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        fullname:
-          type: string
-        phone_number:
-          type: string
-        address:
-          type: string
-      required:
-        - username
-        - password
-        - fullname
-        - phone_number
-        - address
-    AdminLoginDTO:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-      required:
-        - username
-        - password
     ScheduleDTO:
       type: object
       properties:
